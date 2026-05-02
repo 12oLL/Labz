@@ -27,6 +27,7 @@ To detect it using PowerShell, we will use the following:
 Get-WinEvent -Path C:\Users\Zzz\Desktop\Sessa\Practice\Hunting_Rats.evtx -FilterXPath '*/System/EventID=3 and */EventData/Data[@Name="DestinationPort"] and */EventData/Data=8080 and */EventData/Data=4444 and */EventData/Data=4443'
 ```
 As you can see we can add multiple protocols as there isnt a single magic protocol that is always used. If there is any connection, results will look like this.
+
 ![PowerShell.png](images/PowerShell.png)
 
 # Mimikatz
@@ -51,6 +52,7 @@ Moving on to a more efficient way, we will filter for abnormal LSASS behavior.
 </RuleGroup>
 ```
 This filters for any successful attempts to access lsass.exe. lsass.exe is crucial as it stores user credentials, NTLM hashes, and Kerberos tickets. To monitor for just attempts of accessing lsass.exe remove the rule of **0x1fffff**.
+
 ![Mimi.png](images/Mimi.png)
 
 We can see over here **Mimikatz.exe** is targeting **lsass.exe**. **GrantedAccess** 0x1010 means mimikatz can read memory from LSASS.
@@ -79,7 +81,7 @@ Lets hunt for **Startup Persistence**. Startup persistence is where malware runs
 ```
 
 You can also filter using Event IDs. For File Creation we filter for Event ID 11.
-![11 1.png](images/11 1.png)
+![11 1.png](images/111.png)
 ![zzx.png](images/zzx.png)
 
 ## Registry Key
@@ -139,7 +141,9 @@ Ok thats alot of rules, lets break it down.
 **User-writable & staging paths**: Limits detection to files in commonly abused directories such as \Downloads, \Temp, \AppData and others.
 
 Lets take a look at the logs in Event Viewer
+
 ![155.png](images/155.png)
+
 We can see in **Image*** PowerShell_ISE was used to hide data inside **not_malicious.exe** via ADS and named it **malware**.
 ## Remote Threads
 Remote Threads is process injection where a process creates and runs a thread in another process's memory space. Each program runs their own processes, but with remote threads, Program A forces program B to run code that Program B didn't start itself. 
@@ -150,9 +154,10 @@ As we will be working with classic DLL Injections, we need to have an idea on ho
 2. Allocate the space for injecting the path of the DLL file.
 3. Write the path of the DLL into the allocated space.
 4. Execute the DLL by creating a remote thread.
+
 ![DLL.webp](images/DLL.webp)
 
-It is a simple method but with the downsides of needing to save the malicious DLL on disk space and it is visible in the import table.
+It is a simple method with the downsides of needing to save the malicious DLL on disk space and it is visible in the import table.
 
 Lets monitor for Remote Thread Creation using PowerShell.
 ```powershell
@@ -170,8 +175,10 @@ The Event ID 8 in Sysmon is specifically made for Remote Thread detection. To un
 12: Registry creation and delete.
 ```
 For more about Sysmon and Event IDs click [here](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon).
+
 Moving forward with Event Viewer:
 ![RT.png](images/RT.png)
+
 **SourceImage** tells us that Powershell.exe initiated a **remote thread** within **notepad.exe**, indicating possible process injection.
 
 Let's use PowerShell now:
