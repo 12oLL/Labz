@@ -81,7 +81,7 @@ Lets hunt for **Startup Persistence**. Startup persistence is where malware runs
 ```
 
 You can also filter using Event IDs. For File Creation we filter for Event ID 11.
-![11 1.png](images/111.png)
+![11 1.png](images/11.png)
 ![zzx.png](images/zzx.png)
 
 ## Registry Key
@@ -177,6 +177,7 @@ The Event ID 8 in Sysmon is specifically made for Remote Thread detection. To un
 For more about Sysmon and Event IDs click [here](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon).
 
 Moving forward with Event Viewer:
+
 ![RT.png](images/RT.png)
 
 **SourceImage** tells us that Powershell.exe initiated a **remote thread** within **notepad.exe**, indicating possible process injection.
