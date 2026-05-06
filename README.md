@@ -1,5 +1,5 @@
 # Labz
-This repo is my CyberSecurity playground documented. It contains hands-on labs in both BlueTeam and RedTeam. 
+This repo is my CyberSecurity playground documented. It contains hands-on labs in both Defense and Attack. It also contains general knowledge about cybersecurity.  
 The labs performed are from various platforms such as Tryhackme, HackTheBox, LetsDefend and other sources that will be mentioned in each lab.
 
 ## Skills Covered 
