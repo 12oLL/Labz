@@ -87,6 +87,12 @@ cat access.log
 # Log File Locations
 Below is the common log files locations.
 
+**System**
+
+``` bash
+**PowerShell**: C:\Users\<username>\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
+**Linux**: history // Note: History isnt always reliable as it can be cleared via history -c
+```
 **Web Servers**
 **Nginx**
 **Access Logs**: /var/log/nginx/access.log
