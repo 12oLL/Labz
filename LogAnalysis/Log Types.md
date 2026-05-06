@@ -87,33 +87,44 @@ cat access.log
 # Log File Locations
 Below is the common log files locations.
 
-**System**
-
-``` bash
-**PowerShell**: C:\Users\<username>\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
-**Linux**: history // Note: History isnt always reliable as it can be cleared via history -c
-```
 **Web Servers**
 **Nginx**
+```nginx
 **Access Logs**: /var/log/nginx/access.log
 **Error Logs**: /var/log/nginx/error.log
+```
 
 **Apache**
-**Access Logs**: /var/log/apache2/access.log
-**Error Logs**: /var/log/apache2/error.log
+``` bash
+Access Logs: /var/log/apache2/access.log
+Error Logs: /var/log/apache2/error.log
+```
 
 **Databases**
-**MySQL**: /var/log/mysql/error.log
-**PostgreSQL:** /var/log/postgresql-{version}-main.log
+```sql
+MySQL: /var/log/mysql/error.log
+PostgreSQL: /var/log/postgresql-{version}-main.log
+```
 
 **Web Application**
+
+```bash
 **PHP**: /var/log/php/error.log
+```
 
 **Operating Systems**
-**Linux**
-**General Systems Logs**: /var/log/syslog
-**Authentication**: /var/log/auth.log
+**Linux & Windows**
+
+``` bash
+General Systems Logs: /var/log/syslog
+Authentication: /var/log/auth.log
+PowerShell: C:\Users\<username>\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
+Linux: history // Note: History isnt always reliable as it can be cleared via history -c
+
+```
 
 **Firewalls & IDS/IPS**
+``` bash
 **iptables**: /var/log/iptables.log
 **Snort**: /var/log/snort
+```
