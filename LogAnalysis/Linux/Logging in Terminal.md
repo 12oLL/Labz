@@ -2,7 +2,7 @@ Today, we are going through Linux logs.
 
 Most Linux logs are stored in the **/var/log** folder. Lets start by checking **/var/log/syslog**.
 
-![syslogHEAD 1.png](syslogHEAD 1.png)
+![syslogHEAD 1.png](images/syslogHEAD.png)
 
 Using the command *cat /var/log/syslog | head* we get the first 10 logs of the system logs.
 
