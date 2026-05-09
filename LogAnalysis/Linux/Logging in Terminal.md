@@ -1,3 +1,4 @@
+# Linux System Logs
 Today, we are going through Linux logs.
 
 Most Linux logs are stored in the **/var/log** folder. Lets start by checking **/var/log/syslog**.
