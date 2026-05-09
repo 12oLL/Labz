@@ -2,34 +2,34 @@ Today, we are going through Linux logs.
 
 Most Linux logs are stored in the **/var/log** folder. Lets start by checking **/var/log/syslog**.
 
-![[syslogHEAD 1.png]]
+![syslogHEAD 1.png](syslogHEAD 1.png)
 
 Using the command *cat /var/log/syslog | head* we get the first 10 logs of the system logs.
 
 Another way to search for useful and wanted logs is done by using *grep* command.
 
-![[grep.png]]
+![grep.png](grep.png)
 
 ## Searching for user logins
 User logins are store in plain text in the **/var/log/** folder. We can filter by using listing and using grep for narrowing down results and finding what we want using keywords like **login**, **auth**, or **session**.
-![[ls logs.png]]
-![[grepz 1.png]]
+![ls logs.png](ls logs.png)
+![grepz 1.png](grepz 1.png)
 
 # Authentication logs
 The most important files to monitor is */var/log/auth.log* or /*var*/log/secure on RHEL systems. This file contains authentication events as well as user management events and launched sudo commands. 
 
 **Login & Logout Events**
 
-![[seshlog.png]]
+![seshlog.png](seshlog.png)
 
 **SSHD Activity**
 
-![[sshd.png]]
+![sshd.png](sshd.png)
 
 # Miscellaneous Events
 We can monitor for user management events such as password changes, user deletion, privileged user creation and so on.
 
-![[usermanagement.png]]
+![usermanagement.png](usermanagement.png)
 
 In the logs below, the user **ubuntu** used **sudo** and stopped EDR, read the firewall state, and accessed root using **su**.
 
@@ -43,7 +43,7 @@ root@thm-vm:~$ cat /var/log/auth.log | grep -E 'COMMAND='
 # Generic System Logs
 As mentioned previously, most logs are stored in **/var/log**. Lets see whats inside and briefly explain some log files.
 
-![[lsvarlog.png]]
+![lsvarlog.png](lsvarlog.png)
 
 **/var/log/kern.log**: Kernel messages and errors
 **/var/log/syslog**: A wide variety of events
@@ -92,7 +92,7 @@ In the log above we can see some scanning activity, errors, user logins, redirec
 
 The history command shows you each command depending on the user the command is executed at. 
 
-![[history.png]]
+![history.png](history.png)
 
 Although this seems like a great source for analyzing commands executed by an attacker on a compromised machine, it is not so.
 - Attackers can simply clear the history logs using *history -c*
@@ -106,7 +106,7 @@ So far we covered monitoring multiple log sources. The issue they all have is a 
 
 System calls are basically work like this, when you create a process or open an app, you make a specific **system call**. In Linux, there are more than [300 system calls](https://man7.org/linux/man-pages/man2/syscalls.2.html).  
 
-![[Syscalls.png]]
+![Syscalls.png](Syscalls.png)
 
 - **File System**: Used to create, open, read, write, and manage files and directories.
 - **Process Control**: Used to create, execute, synchronize, and terminate processes.
@@ -120,7 +120,7 @@ System calls are important to at least have a grasp general idea about because i
 
 Auditid is a built-in audit solution that can be used for runtime monitoring. The rules can be found in */etc/audit/rules.d* which define which system calls to monitor and what filters to apply. Doing this reduces the noise and the massive size of logs being saved on the system, which in case of an attack, makes it difficult to find in the huge amount of logs.
 
-![[audit.png]]
+![audit.png](audit.png)
 
 **-a always,exit**: Always log what follows
 **-S execve**: Monitor this system call
@@ -131,7 +131,7 @@ For more information about **[syscalls](https://man7.org/linux/man-pages/man2/sy
 ## Using Auditd
 We discussed the rules and how system calls work. Lets use Auditd to view the logs generated in real time.
 
-![[auditd.png]]
+![auditd.png](auditd.png)
 
 Using the command *ausearch -i -k proc_wget*, we get two logs. Lets break them down
 
@@ -176,33 +176,33 @@ Ok now we went over the theory, lets get our hands dirty. Im doing a TryHackMe l
 
 For this question, i used the command *ausearch -i -k file_thm secret | grep -E secret.thm* 
 
-![[Q1.png]]
+![Q1.png](Q1.png)
 
 2.  What is the original file name downloaded from GitHub via wget?
 
 This was one pretty easy just *ausearch -i -k proc_wget | grep -E github*
 
-![[Q2.png]]
+![Q2.png](Q2.png)
 
 3. Which network range was scanned using the downloaded tool? 
 
 This one took me some time . I was very lost at first, navigating through the audit.log raw.
 
-![[Lost.png]]
+![Lost.png](Lost.png)
 
 I saw a long hex that caught my attention, so i went over to CyberChef
 
-![[HEX.png]]
+![HEX.png](HEX.png)
 
 It was just to throw me off of the actual result. So i kept looking for the commands executed and it hit me that i should filter for **EXECVE** to get a better look and well  by filtering *cat /var/log/audit/audit.log | grep -E "EXECVE"*
 
 
-![[Q3.png]]
+![Q3.png](Q3.png)
 
 
 We got it
 
-![[WhatsApp Image 2026-05-08 at 17.21.53(1).jpeg]]
+![WhatsApp Image 2026-05-08 at 17.21.53(1).jpeg](WhatsApp Image 2026-05-08 at 17.21.53(1).jpeg)
 
 # Test Yourself
 
