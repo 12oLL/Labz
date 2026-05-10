@@ -152,16 +152,25 @@ ppid=1661 pid=1685 auid=unset uid=root gid=root euid=root suid=root fsuid=root e
 
 Lets go line by line
 **1**: PROCTITLE or process title shows the process command line. It includes the **timestamp**, and an HTTP request to. 
+
 **2:** CWD -> Current working directory. This shows that the command was started from the root directory **/**.
+
 **3:** *EXECVE* system call received 8 arguments *argc=8* . Lets go through all arguments:
 
 **a0=wget**: Program name 
+
 **a1=--timeout**: Option
+
 **a2=60**: Timeout value (a max 60 seconds wait)
+
 **a3=-U**: User-agent option
+
 **a4=wget/1.12.4-lubuntu4.1 ...**: Custom user-agent string
+
 **a5=-O-**: Output to stdout
+
 **a6=--content-on-error**: Forcing output even if HTTP error occurs
+
 **a7=https://motd[.]ubuntu[.]com:** The target URL
 
 **4:** System call *execve* executed successfully,*exit=0* means no error.
