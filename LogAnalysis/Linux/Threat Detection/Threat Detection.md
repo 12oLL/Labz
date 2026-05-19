@@ -26,7 +26,7 @@ As we can see the common brute force sign of multiple failed logins at the same 
 # Detection Methods
 It is pretty simple to investigate for such type of behavior. We will strictly use the terminal as it is more straightforward without needing to know too much. If you are new to Linux logs take a look [here](https://github.com/12oLL/Labz/blob/main/LogAnalysis/Linux/Logging%20in%20Terminal.md) so you are prepared better.
 
-![[accept.png]]
+![](images/accept.png)
 
 Filtering for **Accepted** will give us the logins that approved and whether they were SSH keys or passwords. Talking about this seems easy, but what do we look for exactly that indicates a red flag?
 
@@ -64,31 +64,31 @@ Detecting discovery can be done by several methods. First we configure **auditd*
 
 Configuration of rules up to your needs.
 
-![[auditd 1.png]]
+![](images/auditd.png)
 
 After applying the rules, an alert will come out like this with the key equal to whatever you named it during the rules configuration. You can also filter using the keyword to search for specific triggered alerts like **discovery_user**.
 
-![[ppid.png]]
+![](images/ppid.png)
 
 As with everything else, context remains the most important key. The commands can be used by anybody, which is why you go further with the analysis to see who it was and what they did. You can do so by filtering logs using the **pid or ppid** to see what started and the processes following the parent process.
 
 For instance over here, I filtered for the command of **id**, and below i can see the users that executed the command as well as go further with the analysis using the process id. 
 
-![[idcom.png]]
+![](images/idcom.png)
 
 Analyzing using PID
 
-![[pid.png]]
+![](images/pid.png)
 
 Processes of PPID
 
-![[ppidrez.png]]
+![](images/ppidrez.png)
 
 When you find a process that interests you, such as a .sh shell, you can check the **cwd** option. Below is an example.
 
-![[cwd.png]]
+![](images/cwd.png)
 
-![[sh.png]]
+![](images/sh.png)
 
 As we can see, we found a script that was found to be executed when analyzed using auditd.
 
@@ -141,21 +141,21 @@ Let's do a lab  to find Dota3 malware and detect the malware attack in its early
 We have a scenario folder that has **auth.log** and **audit.log**. 
 Filtering for the word Accepted is our key to find successful login attempts. We can also use Failed to get the failed attempts and see if there is brute-force attempts.
 
-![](accept.png)
+![](images/accept.png)
 
 Failed login attempts
 
-![](failed.png) 
+![](images/failed.png) 
 
 **Q2**: Which command did the attacker user to list the last logged-in users?
 For this question we will go ahead and filter for the command **last** inside the **audit.log**, so the answer is last anyway.
 
-![](last.png)
+![](images/last.png)
 
 **Q3**: Which three EDR processes did the attacker look for with "egrep"?
 This question is straightforward, we need to find EDR processes that the attacker was looking for. We will do this filtering for the command **egrep**.
 
-![](falcon.png)
+![](images/falcon.png)
 
 # Cryptominer Setup
 Okay, so now we know what is Dota3, how it works, and how to detect it. Now let's take a look on how it is setup.
@@ -204,23 +204,23 @@ As we saw previously, the malware transfers files via SCP. So lets find it.
 
 We know that Dota3, as most malware, hides in the **/tmp** file. So we will use that to our advantage when filtering.
 
-![](gz.png)
+![](images/gz.png)
 
 **Q2**: What was the full command line of the cryptominer launch?
 This is also found using the same command in the question above.
 
-![](nohup.png)
+![](images/nohup.png)
 
 **Q3**: Which IP address range did the attacker scan for an exposed SSH?  
 Answer Example: 10.0.0.1-10.0.0.126.
 
 For this question, we will go through the **audit.log** using **ausearch.** 
 
-![](sign.png)
+![](images/sign.png)
 
 After going through the logs a bit, we can see some IP addresses. I noticed a **zvw1** line in the commands, so i filtered for it.
 
-![](lazt.png)
+![](images/lazt.png)
 
 # Reverse Shells
 Lets move on to the deeper level. When attackers gain initial access to a system by an exploit or a web vulnerability, they dont always have full access. They can face issues such as rate limits and timeouts, making it difficult to proceed with the attack. This is where **reverse shells** come into play.
@@ -231,9 +231,9 @@ First, lets talk about Shells. Shell is a program that allows you to interact wi
 
 For Linux, a shell is basically **SSH**, where you can connect to a device using ssh
 
-![SSH connection](ssh%201.png)
+![SSH connection](images/ssh.png)
 
-![A demonstration of Shell's connection to the kernel.](Shell.png)
+![A demonstration of Shell's connection to the kernel.](images/Shell.png)
 
 Now Reverse Shells are different, as it makes the target system connect to the remote user, which gives the user (you) remote access via the command-line. 
 
@@ -340,33 +340,33 @@ Lets try to detect a privilege escalation through some logs.
 
 I used grep and filtered for pass, simple as that.
 
-![](greppass.png)
+![](images/greppass.png)
 
 **Q2**: Which command line was used to escalate privileges to root?
 
 Same thing here, i grepped for root and found it straight away.
 
-![](root.png)
+![](images/root.png)
 
 **Q3**: Looking at the detected .env file, what was the root password?
 
 This question is a little tricky, and im not sure if my way is correct lol. I went through the **/opt/trypingme** directory, as it was accessed by the attacker after gaining initial access and we can see a discovery command **whoami**.
 
-![](opt.png)
+![](images/opt.png)
 
 So after going there, i changed directories to the /opt directory and found **TWO** files that was clear. 
 
-![](opzies.png)
+![](images/opzies.png)
 
 So I wrote cat then clicked TAB to auto complete and it showed me **.env.local** which was hidden whenever i listed it, and found the answer.
 
-![](pass.png)
+![](images/pass.png)
 
 Another way to answer this is to run this command in the TryPingMe reverse shell machine attached and get the exact answer.  
 
-![](envTPM.png)
+![](images/envTPM.png)
 
-![](TPMpass.png)
+![](images/TPMpass.png)
 
 And that was it for privilege escalation !
 
@@ -397,7 +397,7 @@ Our goal is to detect persistence as soon as it established, and we can do so us
 Lets go through some practice after what we just digested. 
 First, i will go through the rules of the auditd on the system provided by the TryHackMe lab
 
-![](auditdrulez.png)
+![](images/auditdrulez.png)
 
 We can see it shows the rules that should be logged when we search for them using **ausearch**. We talked about auditd rules before if you dont have a clear idea about it in the [Linux System Logs](Linux%20System%20Logs.md). 
 
@@ -409,19 +409,19 @@ We will start by searching using **ausearch**. The reason we are searching there
 
 Because there are many folders inside systemd, we cant go through them manually as that will take too much time and affect our MTTD, so we will use audit search based on the rules defined above.
 
-![](systemdAUDIT.png)
+![](images/systemdAUDIT.png)
 
 The attacker downloaded the persistence and saved it in the **/etc/systemd/system** folder. We will follow the attacker's steps and see what they left behind.
 
-![](tuxservice.png)
+![](images/tuxservice.png)
 
 Lets go and run the service they downloaded.
 
-![](badrservice.png)
+![](images/badrservice.png)
 
 We can see how the attacker prepared the file and set it to persist despite any reboots. Lets go ahead and run it to get our flag which is in **var/lib/misc**.
 
-![](tuxFLAG.png)
+![](images/tuxFLAG.png)
 
 And this is our answer.
 
@@ -429,21 +429,21 @@ And this is our answer.
 
 This question requires us to detect a cron job malware persistence. Lets go ahead and do that.
 
-![](CronJOB.png)
+![](images/CronJOB.png)
 
 We will execute the attackers command **crontab -e** inside the **/var/spool/cron**.
 
-![](CronSHOW.png)
+![](images/CronSHOW.png)
 
 I will use nano as it is the simplest.
 
-![](cronNANO.png)
+![](images/cronNANO.png)
 
 **Note:** When going through system directories, you might face issues accessing some files and directories. Make sure to be root using **sudo su**.
 
 Lets search for the directory we just found at the bottom in the picture above.
 
-![](cronROOT.png)
+![](images/cronROOT.png)
 
 And we found our second answer.
 
@@ -509,13 +509,13 @@ Lets do some questions.
 
 We will go through the auth log as thats where will account creations will be and we will find our answer. 
 
-![](userADD.png)
+![](images/userADD.png)
 
 **Q2**: Which file was changed to allow SSH key persistence?
 
 Use ausearch and search for the default file where public ssh keys are stored and thats our answer. 
 
-![](SSHbackdoor.png)
+![](images/SSHbackdoor.png)
 
 # Conclusion
 ## Targeted attacks
