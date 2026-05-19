@@ -531,6 +531,6 @@ Linux machines are used as entry points as they are mostly used as firewalls, we
 If you have reached this far, this is what we have covered together so far (highlighted in yellow).
 I suggest you take a look at MITRE ATT&CK [Framework]() to have a better understanding and build up your knowledge.
 
-![](MITRE.png)
+![](images/MITRE.png)
 
 That was all, see yall next time and happy hacking 😃 💻 .
