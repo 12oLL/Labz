@@ -26,7 +26,7 @@ May 10 02:14:27 kali-ssh sshd[1858]: pam_unix(sshd:session): session opened for 
 As we can see the common brute force sign of multiple failed logins at the same time with few seconds in difference, it could be manual or automated. The user eventually gains access to **root** and a session is opened.
 
 # Detection Methods
-It is pretty simple to investigate for such type of behavior. We will strictly use the terminal as it is more straightforward without needing to know too much. If you are new to Linux logs take a look [here](https://github.com/12oLL/Labz/blob/main/LogAnalysis/Linux/Logging%20in%20Terminal.md) so you are prepared better.
+It is pretty simple to investigate for such type of behavior. We will strictly use the terminal as it is more straightforward without needing to know too much. If you are new to Linux logs take a look [here](https://github.com/12oLL/Labz/blob/main/LogAnalysis/Linux/System%20Logs/Logging%20in%20Terminal.md) so you are prepared better.
 
 ![](images/accept.png)
 
@@ -401,7 +401,7 @@ First, i will go through the rules of the auditd on the system provided by the T
 
 ![](images/auditdrulez.png)
 
-We can see it shows the rules that should be logged when we search for them using **ausearch**. We talked about auditd rules before if you dont have a clear idea about it in the [Linux System Logs](Linux%20System%20Logs.md). 
+We can see it shows the rules that should be logged when we search for them using **ausearch**. We talked about auditd rules before if you dont have a clear idea about it in the [Linux System Logs](https://github.com/12oLL/Labz/blob/main/LogAnalysis/Linux/System%20Logs/Logging%20in%20Terminal.md). 
 
 Moving on, we will solve two questions. Our task is to detect **2** persistence methods using **auditd logs**.
 
@@ -531,7 +531,7 @@ Linux machines are used as entry points as they are mostly used as firewalls, we
 ## Threat Detection Finale
 
 If you have reached this far, this is what we have covered together so far (highlighted in yellow).
-I suggest you take a look at MITRE ATT&CK [Framework]() to have a better understanding and build up your knowledge.
+I suggest you take a look at MITRE ATT&CK [Framework](https://attack.mitre.org/) to have a better understanding and build up your knowledge.
 
 ![](images/MITRE.png)
 
