@@ -3,6 +3,8 @@ This repo is my CyberSecurity playground documented. It contains hands-on labs i
 
 The labs performed are from various platforms such as Tryhackme, HackTheBox, LetsDefend and other sources that will be mentioned in each lab.
 
+/assets/boo.gif
+
 ## Skills Covered 
 The skills will range for each lab but these are the key skills used in combination in labs:
 - Fundamental knowledge of OSs (Linux, Windows)
