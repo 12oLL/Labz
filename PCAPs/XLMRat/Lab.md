@@ -1,4 +1,4 @@
-Today we doing a lab from CyberDefenders using **Wireshark, PowerShell, CyberChef, Open CTI, and Python3**.
+Today we doing a lab from [CyberDefenders]([url](https://cyberdefenders.org/blueteam-ctf-challenges/xlmrat/)) using **Wireshark, PowerShell, CyberChef, Open CTI, and Python3**.
 
 **Q1**: The attacker successfully executed a command to download the first stage of the malware. What is the URL from which the first malware stage was installed?
 
