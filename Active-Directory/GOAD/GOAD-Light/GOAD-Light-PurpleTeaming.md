@@ -1,3 +1,5 @@
+![](images/Purple.png)
+
 # Introduction
 Active Directory is almost in every organization, especially with a large amount of employees that need to be on a centralized network, database, and emails etc. Being able to break it to find vulnerabilities before attackers do is a great skill, that even if the **AD** is configured properly, there is always an open door.
 ![](images/AD.png)
